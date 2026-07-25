@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Placement Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F0E7;
+    --paper-2:#EDE9DC;
+    --ink:#1E2A24;
+    --ink-soft:#4B564F;
+    --rule:#C9C2AE;
+    --pine:#2F5D50;
+    --pine-dark:#1F4038;
+    --gold:#C99A2E;
+    --brick:#A23B3B;
+    --white:#FCFBF7;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Source Sans 3', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    color:var(--ink);
+    margin:0;
+  }
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- Layout shell ---------- */
+  .shell{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  @media (max-width:860px){
+    .shell{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Side tab index ---------- */
+  .index{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    padding:28px 0 28px 8px;
+    border-right:1px solid var(--rule);
+    overflow-y:auto;
+  }
+  @media (max-width:860px){
+    .index{
+      position:static;
+      height:auto;
+      display:flex;
+      overflow-x:auto;
+      border-right:none;
+      border-bottom:1px solid var(--rule);
+      padding:14px 12px;
+      gap:6px;
+    }
+  }
+  .index-brand{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:0 18px 16px 18px;
+  }
+  @media (max-width:860px){ .index-brand{display:none;} }
+  .tab{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 16px 11px 18px;
+    border-left:3px solid transparent;
+    text-decoration:none;
+    color:var(--ink-soft);
+    font-size:14.5px;
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .tab:hover{background:var(--paper-2);}
+  .tab .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--rule);
+    min-width:18px;
+  }
+  .tab.active{
+    border-left-color:var(--pine);
+    color:var(--pine-dark);
+    background:var(--paper-2);
+    font-weight:600;
+  }
+  .tab.active .num{color:var(--pine);}
+
+  /* ---------- Main column ---------- */
+  main{padding:0 0 80px 0;}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:5;
+    background:rgba(243,240,231,.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+    padding:14px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+  @media (max-width:860px){ .topbar{padding:12px 20px;} }
+  .progress-pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--pine-dark);
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-radius:999px;
+    padding:6px 14px;
+  }
+  .print-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.04em;
+    background:var(--pine);
+    color:var(--white);
+    border:none;
+    border-radius:6px;
+    padding:8px 16px;
+    cursor:pointer;
+  }
+  .print-btn:hover{background:var(--pine-dark);}
+
+  section{
+    padding:56px 40px 20px 48px;
+    max-width:820px;
+    border-bottom:1px solid var(--rule);
+  }
+  @media (max-width:860px){ section{padding:40px 20px 10px 24px;} }
+  section:last-of-type{border-bottom:none;}
+
+  .cover{
+    padding:64px 48px 40px 48px;
+    max-width:820px;
+  }
+  .cover .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--pine);
+    margin-bottom:14px;
+  }
+  .cover h1{
+    font-size:42px;
+    line-height:1.08;
+    margin-bottom:18px;
+  }
+  @media (max-width:860px){ .cover h1{font-size:32px;} }
+  .cover .lede{
+    font-size:17px;
+    color:var(--ink-soft);
+    max-width:60ch;
+    margin-bottom:26px;
+  }
+  .cover .field-row{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    margin-top:30px;
+  }
+  .field{min-width:200px;flex:1;}
+  .field label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field input{
+    width:100%;
+    border:none;
+    border-bottom:1.5px solid var(--ink);
+    background:transparent;
+    font-family:'Source Sans 3', sans-serif;
+    font-size:16px;
+    padding:6px 2px;
+    color:var(--ink);
+  }
+  .field input:focus{outline:none;border-bottom-color:var(--pine);}
+
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  .sec-head .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--pine);
+    border:1px solid var(--pine);
+    border-radius:4px;
+    padding:2px 8px;
+  }
+  .sec-head h2{font-size:27px;}
+  .sec-sub{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin:8px 0 30px 0;
+    max-width:65ch;
+  }
+
+  .q{
+    margin-bottom:26px;
+    padding-bottom:22px;
+    border-bottom:1px dashed var(--rule);
+  }
+  .q:last-child{border-bottom:none;}
+  .q-num{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--pine);
+    font-weight:600;
+    margin-right:8px;
+  }
+  .q-prompt{font-size:16px;}
+  .q-type{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:var(--paper-2);
+    border-radius:3px;
+    padding:2px 7px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+
+  /* answer widgets */
+  .ruled{
+    width:100%;
+    border:none;
+    background:
+      repeating-linear-gradient(var(--paper) 0 31px, var(--rule) 31px 32px);
+    background-position:0 8px;
+    font-family:'Source Sans 3', sans-serif;
+    font-size:15.5px;
+    line-height:32px;
+    padding:8px 4px 4px 4px;
+    color:var(--ink);
+    resize:vertical;
+    margin-top:12px;
+  }
+  .ruled:focus{outline:none;}
+  .ruled.short{height:70px;}
+  .ruled.med{height:96px;}
+  .ruled.long{height:128px;}
+
+  .blank-input{
+    border:none;
+    border-bottom:2px dotted var(--ink-soft);
+    background:transparent;
+    font-family:'Source Sans 3', sans-serif;
+    font-size:16px;
+    padding:2px 6px;
+    min-width:150px;
+    color:var(--pine-dark);
+    font-weight:600;
+  }
+  .blank-input:focus{outline:none;border-bottom-color:var(--pine);}
+
+  .choices{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+  }
+  .choice{
+    font-family:'Source Sans 3', sans-serif;
+    font-size:15px;
+    background:var(--white);
+    border:1.5px solid var(--rule);
+    border-radius:8px;
+    padding:9px 16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .choice .letter{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    border:1px solid var(--rule);
+    border-radius:50%;
+    width:20px;height:20px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .choice:hover{border-color:var(--pine);}
+  .choice.selected{
+    border-color:var(--pine);
+    background:#E7EFE9;
+  }
+  .choice.selected .letter{
+    background:var(--pine);
+    border-color:var(--pine);
+    color:var(--white);
+  }
+
+  /* picture placeholder */
+  .img-box{
+    border:2px dashed var(--rule);
+    border-radius:10px;
+    background:var(--white);
+    height:280px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    color:var(--ink-soft);
+    margin-bottom:22px;
+    text-align:center;
+    padding:20px;
+  }
+  .img-box .icon{font-size:30px;}
+  .img-box .cap{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.03em;
+  }
+  .img-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--pine);
+    margin-bottom:10px;
+  }
+
+  .passage{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:26px 28px;
+    font-size:15.8px;
+    line-height:1.75;
+    margin-bottom:30px;
+  }
+  .passage h3{font-size:19px;margin-bottom:12px;}
+
+  .scenario-card{
+    background:var(--white);
+    border:1px solid var(--rule);
+    border-left:4px solid var(--pine);
+    border-radius:8px;
+    padding:20px 22px;
+    margin-bottom:20px;
+  }
+  .scenario-card h3{
+    font-size:17px;
+    margin-bottom:8px;
+  }
+  .scenario-card p{margin:0;color:var(--ink-soft);}
+
+  footer{
+    max-width:820px;
+    padding:30px 40px 60px 48px;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+
+  /* ---------- Print ---------- */
+  @media print{
+    .index, .topbar{display:none !important;}
+    .shell{display:block;}
+    body{background:#fff;}
+    section{
+      break-inside:avoid-page;
+      page-break-after:always;
+      border-bottom:none;
+      padding:26px 6px;
+    }
+    .cover{padding:20px 6px;}
+    .choice{border:1.2px solid #999;}
+    .choice.selected{background:#eee;}
+    .img-box{height:220px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="index" id="index">
+    <div class="index-brand">Placement&nbsp;Workbook</div>
+    <a class="tab" data-target="welcome"><span class="num">00</span>Welcome</a>
+    <a class="tab" data-target="conversation"><span class="num">01</span>Conversation</a>
+    <a class="tab" data-target="pictures"><span class="num">02</span>Picture Description</a>
+    <a class="tab" data-target="reading"><span class="num">03</span>Reading</a>
+    <a class="tab" data-target="grammar"><span class="num">04</span>Grammar</a>
+    <a class="tab" data-target="roleplay"><span class="num">05</span>Role Play</a>
+    <a class="tab" data-target="discussion"><span class="num">06</span>Discussion</a>
+  </nav>
+
+  <main>
+    <div class="topbar">
+      <span class="progress-pill" id="progressPill">0 of 0 answered</span>
+      <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+    </div>
+
+    <section class="cover" id="welcome">
+      <div class="eyebrow">English Placement Assessment</div>
+      <h1>Let's find out where your<br>English stands today.</h1>
+      <p class="lede">This assessment helps us understand your current English level so we can place you in the right class. There's no need to prepare — just answer as naturally as you can, the way you would in everyday conversation. It takes about 30&ndash;40 minutes and covers speaking topics, a short reading passage, grammar, role-play scenarios, and discussion questions.</p>
+      <div class="field-row">
+        <div class="field"><label>Full Name</label><input type="text" placeholder="Your name"></div>
+        <div class="field"><label>Date</label><input type="text" placeholder="DD / MM / YYYY"></div>
+        <div class="field"><label>Native Language</label><input type="text" placeholder="Your first language"></div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 1: CONVERSATION ============ -->
+    <section id="conversation">
+      <div class="sec-head"><span class="tag">01</span><h2>Conversation</h2></div>
+      <p class="sec-sub">Answer each question out loud or in writing. The questions get a little more challenging as you go.</p>
+
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">What is your full name, and what would you like me to call you?</span>
+        <textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">Where are you from, and how long have you lived in Canada?</span>
+        <textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">Can you tell me a little about your family?</span>
+        <textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you do for work, or what kind of job are you looking for?</span>
+        <textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Can you describe a typical day in your life?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">What do you usually do in your free time?</span>
+        <textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">7.</span><span class="q-prompt">What is something you have accomplished that you're proud of?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">8.</span><span class="q-prompt">Have you traveled to any other countries? What was that experience like?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">9.</span><span class="q-prompt">What has been the biggest adjustment for you since moving to Canada?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">10.</span><span class="q-prompt">Why did you decide to learn English, and how do you usually practice it?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">11.</span><span class="q-prompt">What is the most challenging part of learning English for you so far?</span>
+        <textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">12.</span><span class="q-prompt">Where do you hope to be, personally or professionally, in the next five years?</span>
+        <textarea class="ruled long"></textarea></div>
+    </section>
+
+    <!-- ============ SECTION 2: PICTURE DESCRIPTION ============ -->
+    <section id="pictures">
+      <div class="sec-head"><span class="tag">02</span><h2>Picture Description</h2></div>
+      <p class="sec-sub">For each image, look carefully and answer all six questions below it. Add your own photo or illustration to each box before the lesson if you'd like a visual prompt.</p>
+
+      <div class="img-title">Image 1 &middot; Busy City Park</div>
+      <div class="img-box"><div class="icon">&#128196;</div><div class="cap">Insert photo or illustration here<br>(families picnicking, children playing soccer, food truck, pond with ducks&hellip;)</div></div>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Describe everything you can see.</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What are the people doing?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">What do you think happened before this moment?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you think will happen next?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Which part of the picture is the most interesting? Why?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">If you were in this picture, what would you be doing?</span><textarea class="ruled short"></textarea></div>
+
+      <div class="img-title" style="margin-top:36px;">Image 2 &middot; Airport Departure Hall</div>
+      <div class="img-box"><div class="icon">&#128196;</div><div class="cap">Insert photo or illustration here<br>(check-in line, family saying goodbye, security, departure board&hellip;)</div></div>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Describe everything you can see.</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What are the people doing?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">What do you think happened before this moment?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you think will happen next?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Which part of the picture is the most interesting? Why?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">If you were in this picture, what would you be doing?</span><textarea class="ruled short"></textarea></div>
+
+      <div class="img-title" style="margin-top:36px;">Image 3 &middot; Grocery Store</div>
+      <div class="img-box"><div class="icon">&#128196;</div><div class="cap">Insert photo or illustration here<br>(fresh produce, self-checkout, a child asking for candy, sale signs&hellip;)</div></div>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Describe everything you can see.</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What are the people doing?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">What do you think happened before this moment?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you think will happen next?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Which part of the picture is the most interesting? Why?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">If you were in this picture, what would you be doing?</span><textarea class="ruled short"></textarea></div>
+
+      <div class="img-title" style="margin-top:36px;">Image 4 &middot; Family Dinner</div>
+      <div class="img-box"><div class="icon">&#128196;</div><div class="cap">Insert photo or illustration here<br>(grandparents, birthday cake, balloons, a spilled cup of juice&hellip;)</div></div>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Describe everything you can see.</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What are the people doing?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">What do you think happened before this moment?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you think will happen next?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Which part of the picture is the most interesting? Why?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">If you were in this picture, what would you be doing?</span><textarea class="ruled short"></textarea></div>
+
+      <div class="img-title" style="margin-top:36px;">Image 5 &middot; Office Workplace</div>
+      <div class="img-box"><div class="icon">&#128196;</div><div class="cap">Insert photo or illustration here<br>(team meeting, whiteboard, a manager presenting, someone on the phone&hellip;)</div></div>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Describe everything you can see.</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What are the people doing?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">What do you think happened before this moment?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">What do you think will happen next?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Which part of the picture is the most interesting? Why?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">If you were in this picture, what would you be doing?</span><textarea class="ruled short"></textarea></div>
+    </section>
+
+    <!-- ============ SECTION 3: READING ============ -->
+    <section id="reading">
+      <div class="sec-head"><span class="tag">03</span><h2>Reading</h2></div>
+      <p class="sec-sub">Read the passage, then answer the questions that follow.</p>
+
+      <div class="passage">
+        <h3>Starting Over</h3>
+        <p>Three years ago, Daniel moved to Canada from Brazil with only two suitcases and a small amount of savings. He didn't know anyone in his new city, and his English was just good enough to order coffee and ask for directions. During his first few months, he struggled to find work; many companies wanted "Canadian experience," which he didn't have yet. Eventually, a small logistics company gave him a chance as a warehouse assistant, and he promised himself he would learn something new every single day.</p>
+        <p>At first, understanding his coworkers was exhausting. People spoke quickly, used slang, and laughed at jokes he didn't understand. Daniel started writing down new expressions in a notebook and asking his coworkers to explain them during breaks. Slowly, conversations became easier. He joined a weekend soccer league, where he met people from all over the world, and two of his teammates became close friends.</p>
+        <p>Today, Daniel has been promoted to shift supervisor, and he often helps train new employees who remind him of himself three years ago. He still makes mistakes in English, but he isn't afraid of them anymore. When people ask if he misses Brazil, he says yes — but he also says that Canada finally feels like home.</p>
+      </div>
+
+      <h3 style="font-size:16px;margin-bottom:14px;">Multiple Choice</h3>
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">What did Daniel bring with him when he first arrived in Canada?</span>
+        <div class="choices">
+          <div class="choice"><span class="letter">A</span>A car and a laptop</div>
+          <div class="choice"><span class="letter">B</span>Two suitcases and some savings</div>
+          <div class="choice"><span class="letter">C</span>A job offer letter</div>
+          <div class="choice"><span class="letter">D</span>His family</div>
+        </div></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">What was one of the biggest challenges Daniel faced when looking for work?</span>
+        <div class="choices">
+          <div class="choice"><span class="letter">A</span>He didn't have a valid visa</div>
+          <div class="choice"><span class="letter">B</span>He couldn't drive</div>
+          <div class="choice"><span class="letter">C</span>Employers wanted Canadian experience</div>
+          <div class="choice"><span class="letter">D</span>There were no jobs in his field</div>
+        </div></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">How did Daniel try to improve his understanding of conversations at work?</span>
+        <div class="choices">
+          <div class="choice"><span class="letter">A</span>He watched TV shows</div>
+          <div class="choice"><span class="letter">B</span>He wrote down new expressions and asked coworkers to explain them</div>
+          <div class="choice"><span class="letter">C</span>He took an evening English course</div>
+          <div class="choice"><span class="letter">D</span>He asked his manager for a private tutor</div>
+        </div></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">How did Daniel make new friends outside of work?</span>
+        <div class="choices">
+          <div class="choice"><span class="letter">A</span>Through an online forum</div>
+          <div class="choice"><span class="letter">B</span>Through his weekend soccer league</div>
+          <div class="choice"><span class="letter">C</span>Through his church</div>
+          <div class="choice"><span class="letter">D</span>Through his neighbours</div>
+        </div></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">What is Daniel's current position at the logistics company?</span>
+        <div class="choices">
+          <div class="choice"><span class="letter">A</span>Warehouse assistant</div>
+          <div class="choice"><span class="letter">B</span>Truck driver</div>
+          <div class="choice"><span class="letter">C</span>Shift supervisor</div>
+          <div class="choice"><span class="letter">D</span>Company owner</div>
+        </div></div>
+
+      <h3 style="font-size:16px;margin:30px 0 14px 0;">Short Answer</h3>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">Why do you think many companies wanted "Canadian experience" from Daniel?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">7.</span><span class="q-prompt">What method did Daniel use to remember new words and expressions?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">8.</span><span class="q-prompt">How do you think Daniel felt during his first few months in Canada? Explain.</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">9.</span><span class="q-prompt">What role does the soccer league play in Daniel's life?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">10.</span><span class="q-prompt">Why do you think Daniel is no longer afraid of making mistakes in English?</span><textarea class="ruled short"></textarea></div>
+
+      <h3 style="font-size:16px;margin:30px 0 14px 0;">Your Opinion</h3>
+      <div class="q"><span class="q-num">11.</span><span class="q-prompt">Do you think it's fair for employers to ask for "Canadian experience"? Why or why not?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">12.</span><span class="q-prompt">What advice would you give to someone who has just arrived in a new country and doesn't know anyone yet?</span><textarea class="ruled med"></textarea></div>
+    </section>
+
+    <!-- ============ SECTION 4: GRAMMAR ============ -->
+    <section id="grammar">
+      <div class="sec-head"><span class="tag">04</span><h2>Grammar</h2></div>
+      <p class="sec-sub">Complete each question. Some ask you to choose an answer, some ask you to fill in a blank, and some ask you to rewrite or correct a sentence.</p>
+
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">Choose the correct form: She <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> at a hospital downtown.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>work</div><div class="choice"><span class="letter">B</span>works</div><div class="choice"><span class="letter">C</span>working</div></div></div>
+
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">Complete: My brother usually <input type="text" class="blank-input"> (drive) to work, but today he is taking the bus.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">Yesterday, we <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> to the mall after school.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>go</div><div class="choice"><span class="letter">B</span>went</div><div class="choice"><span class="letter">C</span>goes</div></div></div>
+
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">Find and correct the mistake: "Last summer, I visit my cousins in Toronto."<span class="q-type">Correct the Mistake</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">Right now, the children <input type="text" class="blank-input"> (play) in the backyard.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">Rewrite in the negative form: "He is watching TV."<span class="q-type">Rewrite</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">7.</span><span class="q-prompt">Look at those dark clouds! It <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> soon.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>will rain</div><div class="choice"><span class="letter">B</span>is going to rain</div><div class="choice"><span class="letter">C</span>rains</div></div></div>
+
+      <div class="q"><span class="q-num">8.</span><span class="q-prompt">Complete with "will": I think the meeting <input type="text" class="blank-input"> (finish) before noon.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">9.</span><span class="q-prompt">Choose the correct form: She <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> in Moncton for six years.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>has lived</div><div class="choice"><span class="letter">B</span>lived</div><div class="choice"><span class="letter">C</span>is living</div></div></div>
+
+      <div class="q"><span class="q-num">10.</span><span class="q-prompt">Complete: They <input type="text" class="blank-input" style="min-width:60px;"> (never / be) to Vancouver before.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">11.</span><span class="q-prompt">Rewrite using "just": "He finished his homework a few minutes ago."<span class="q-type">Rewrite</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">12.</span><span class="q-prompt">Complete with a, an, or the: I saw <input type="text" class="blank-input" style="min-width:50px;"> interesting movie last night. <input type="text" class="blank-input" style="min-width:50px;"> movie was about <input type="text" class="blank-input" style="min-width:50px;"> astronaut.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">13.</span><span class="q-prompt">Correct the mistake: "She works as a engineer in a big company."<span class="q-type">Correct the Mistake</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">14.</span><span class="q-prompt">Complete: The meeting starts <input type="text" class="blank-input" style="min-width:50px;"> 9 a.m. <input type="text" class="blank-input" style="min-width:50px;"> Monday morning.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">15.</span><span class="q-prompt">Choose the correct preposition: The keys are <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> the table.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>on</div><div class="choice"><span class="letter">B</span>in</div><div class="choice"><span class="letter">C</span>at</div></div></div>
+
+      <div class="q"><span class="q-num">16.</span><span class="q-prompt">Complete: This apartment is <input type="text" class="blank-input"> (quiet) than my old one.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">17.</span><span class="q-prompt">Choose the correct form: Toronto is <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> than Moncton.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>bigger</div><div class="choice"><span class="letter">B</span>more big</div><div class="choice"><span class="letter">C</span>biggest</div></div></div>
+
+      <div class="q"><span class="q-num">18.</span><span class="q-prompt">Choose the best modal verb: You <span class="blank-input" style="display:inline-block;width:auto;min-width:0;">____</span> see a doctor if the pain continues.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>must</div><div class="choice"><span class="letter">B</span>should</div><div class="choice"><span class="letter">C</span>can</div></div></div>
+
+      <div class="q"><span class="q-num">19.</span><span class="q-prompt">Complete with an appropriate modal verb: <input type="text" class="blank-input"> I open the window? It's a bit warm in here.<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">20.</span><span class="q-prompt">Turn into a question: "She has already finished the report."<span class="q-type">Rewrite</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">21.</span><span class="q-prompt">Correct the mistake: "Where you are going after work?"<span class="q-type">Correct the Mistake</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+
+      <div class="q"><span class="q-num">22.</span><span class="q-prompt">Complete with the correct adverb form: He speaks English very <input type="text" class="blank-input"> (fluent).<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">23.</span><span class="q-prompt">Choose the correct sentence.<span class="q-type">Multiple Choice</span></span>
+        <div class="choices"><div class="choice"><span class="letter">A</span>She drives careful.</div><div class="choice"><span class="letter">B</span>She drives carefully.</div><div class="choice"><span class="letter">C</span>She careful drives.</div></div></div>
+
+      <div class="q"><span class="q-num">24.</span><span class="q-prompt">Complete with much or many: How <input type="text" class="blank-input" style="min-width:60px;"> time do you spend on your phone every day?<span class="q-type">Fill in the Blank</span></span></div>
+
+      <div class="q"><span class="q-num">25.</span><span class="q-prompt">Correct the mistake: "I need some informations about the bus schedule."<span class="q-type">Correct the Mistake</span></span>
+        <input type="text" class="blank-input" style="width:100%;margin-top:12px;"></div>
+    </section>
+
+    <!-- ============ SECTION 5: ROLE PLAY ============ -->
+    <section id="roleplay">
+      <div class="sec-head"><span class="tag">05</span><h2>Role Play</h2></div>
+      <p class="sec-sub">Act out each scenario out loud. Take a moment to think before you begin speaking.</p>
+
+      <div class="scenario-card">
+        <h3>Scenario 1 &middot; Customer Service Call</h3>
+        <p>You bought a new laptop yesterday, and today it won't turn on. Call customer service to explain the problem and ask for help. Be ready to describe when and where you bought it, what happens when you try to turn it on, and what solution you're hoping for.</p>
+      </div>
+      <div class="scenario-card">
+        <h3>Scenario 2 &middot; Visiting the Doctor</h3>
+        <p>You've been feeling unwell for the past three days. Visit a doctor and describe your symptoms, when they started, and anything that makes them better or worse. Answer the doctor's questions clearly.</p>
+      </div>
+      <div class="scenario-card">
+        <h3>Scenario 3 &middot; Explaining a Missed Meeting</h3>
+        <p>You missed an important meeting at work today. Speak with your manager, explain what happened, apologize appropriately, and suggest how you will follow up on what you missed.</p>
+      </div>
+      <div class="scenario-card">
+        <h3>Scenario 4 &middot; Ordering at a Restaurant</h3>
+        <p>You are ordering food at a restaurant, but the dish you wanted isn't available. Talk with the server, ask about alternatives, and decide what to order instead.</p>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 6: DISCUSSION ============ -->
+    <section id="discussion">
+      <div class="sec-head"><span class="tag">06</span><h2>Discussion</h2></div>
+      <p class="sec-sub">Answer each question with at least a minute of speaking. The questions become more challenging as you go.</p>
+
+      <div class="q"><span class="q-num">1.</span><span class="q-prompt">What do you usually do with your family on weekends?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">2.</span><span class="q-prompt">Tell me about your closest friend. How did you meet?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">3.</span><span class="q-prompt">How much time do you spend using your phone or computer every day?</span><textarea class="ruled short"></textarea></div>
+      <div class="q"><span class="q-num">4.</span><span class="q-prompt">Do you use social media? What do you like or dislike about it?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">5.</span><span class="q-prompt">What is the best way for you to learn a new language?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">6.</span><span class="q-prompt">What has surprised you most about life in Canada?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">7.</span><span class="q-prompt">What do you like and dislike about your current job or field of work?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">8.</span><span class="q-prompt">What is one dream you have had since you were a child?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">9.</span><span class="q-prompt">How important is education for building a good future?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">10.</span><span class="q-prompt">If you could travel anywhere in the world, where would you go and why?</span><textarea class="ruled med"></textarea></div>
+      <div class="q"><span class="q-num">11.</span><span class="q-prompt">What changes have you noticed in the weather or seasons in recent years?</span><textarea class="ruled long"></textarea></div>
+      <div class="q"><span class="q-num">12.</span><span class="q-prompt">How do you think artificial intelligence will change the way people work?</span><textarea class="ruled long"></textarea></div>
+      <div class="q"><span class="q-num">13.</span><span class="q-prompt">What does a healthy lifestyle mean to you?</span><textarea class="ruled long"></textarea></div>
+      <div class="q"><span class="q-num">14.</span><span class="q-prompt">How do you personally define success?</span><textarea class="ruled long"></textarea></div>
+      <div class="q"><span class="q-num">15.</span><span class="q-prompt">What does happiness mean to you, and what makes you feel truly happy?</span><textarea class="ruled long"></textarea></div>
+    </section>
+
+    <footer>English Placement Assessment &middot; For classroom placement use.</footer>
+  </main>
+</div>
+
+<script>
+  // Multiple-choice selection toggling
+  document.querySelectorAll('.choices').forEach(group=>{
+    group.addEventListener('click', (e)=>{
+      const choice = e.target.closest('.choice');
+      if(!choice) return;
+      group.querySelectorAll('.choice').forEach(c=>c.classList.remove('selected'));
+      choice.classList.add('selected');
+      updateProgress();
+    });
+  });
+
+  // Scrollspy for side tabs
+  const tabs = document.querySelectorAll('.tab');
+  const sections = Array.from(tabs).map(t=>document.getElementById(t.dataset.target)).filter(Boolean);
+  tabs.forEach(t=>t.addEventListener('click', (e)=>{
+    e.preventDefault();
+    document.getElementById(t.dataset.target).scrollIntoView({behavior:'smooth'});
+  }));
+  const spy = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      const tab = document.querySelector(`.tab[data-target="${entry.target.id}"]`);
+      if(!tab) return;
+      if(entry.isIntersecting){
+        tabs.forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  sections.forEach(s=>spy.observe(s));
+
+  // Progress tracker across text inputs/textareas + selected choices
+  function updateProgress(){
+    const fields = document.querySelectorAll('main textarea, main input[type="text"].blank-input');
+    let filled = 0;
+    fields.forEach(f=>{ if(f.value.trim().length>0) filled++; });
+    const choiceGroups = document.querySelectorAll('.choices');
+    let choicesAnswered = 0;
+    choiceGroups.forEach(g=>{ if(g.querySelector('.choice.selected')) choicesAnswered++; });
+    const total = fields.length + choiceGroups.length;
+    const done = filled + choicesAnswered;
+    document.getElementById('progressPill').textContent = `${done} of ${total} answered`;
+  }
+  document.querySelectorAll('main textarea, main input[type="text"].blank-input').forEach(f=>{
+    f.addEventListener('input', updateProgress);
+  });
+  updateProgress();
+</script>
+</body>
+</html>
